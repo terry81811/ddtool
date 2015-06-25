@@ -1,9 +1,9 @@
-var env = process.env.WEBPACK_ENV || "index";
+var env = process.env.WEBPACK_ENV || "dev";
 var entry;
 
 if (env === "dev") {
   entry = [
-    "webpack-dev-server/client?http://localhost:3000",
+    "webpack-dev-server/client?http://localhost:3001",
     "webpack/hot/dev-server",
     "./src/Index.jsx"
   ];
