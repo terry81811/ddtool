@@ -16,13 +16,14 @@ let DDWrapper = React.createClass({
   },
 
   render: function() {
+    let pages = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
     return (
       <Row className={"DDWrapper"}>
         <Col md={2}>
-          <DDLeftSideBar />
+          <DDLeftSideBar pages={pages}/>
         </Col>
         <Col md={10}>
-          <DDCentralView />
+          <DDCentralView pages={pages} className={"padding15"}/>
         </Col>
       </Row>
     );

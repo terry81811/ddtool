@@ -1,8 +1,46 @@
+/* for overall layout */
+
 html, body {
   height: 100%;
 }
 
-#container {
-  padding-right: 30px;
-  padding-left: 30px;
+#container, .DDWrapper, .DDWrapper>div {
+  height: 100%;
+}
+
+.padding15Col {
+  padding: 15px;
+}
+
+.DDCentralView > div, .DDLeftSideBar > div {
+  overflow: scroll;
+}
+
+/* for global utilities */
+
+.anchor-cursor {
+  cursor: pointer;
+}
+
+/* for DDLeftSideBar */
+
+.DDLeftSideBar {
+  overflow: scroll;
+  padding-left: 15px; /* to amend the .row margin-left: 15 by default*/
+  height: 100%;
+  background-color: #EEE;
+}
+
+/* for DDCentralView */
+
+.DDCentralView {
+  overflow: scroll;
+  height: 100%;
+  padding-right: 15px
+}
+
+/* for DDPageThumbNail */
+
+.DDPageThumbNail {
+  padding-top: 15px;
 }
