@@ -10,8 +10,8 @@ const Fluxxor = require("fluxxor");
 const FluxMixin = Fluxxor.FluxMixin(React),
     StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
-let DDCentralView = React.createClass({
-  displayName: "DDCentralView",
+let DDPanelView = React.createClass({
+  displayName: "DDPanelView",
   propTypes: {
     pages: React.PropTypes.array
   },
@@ -22,7 +22,7 @@ let DDCentralView = React.createClass({
     });
 
     return (
-      <Row className={"DDCentralView"}>
+      <Row className={"DDPanelView"}>
         <Col className={"padding15Col"}>
           {PagePanels}
         </Col>
@@ -31,4 +31,4 @@ let DDCentralView = React.createClass({
   }
 });
 
-module.exports = DDCentralView;
+module.exports = DDPanelView;

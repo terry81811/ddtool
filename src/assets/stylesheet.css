@@ -12,7 +12,7 @@ html, body {
   padding: 15px;
 }
 
-.DDCentralView > div, .DDLeftSideBar > div {
+.DDPanelView > div, .DDLeftSideBar > div {
   overflow: scroll;
 }
 
@@ -20,6 +20,10 @@ html, body {
 
 .anchor-cursor {
   cursor: pointer;
+}
+
+.disabledColor {
+  color: #AAA;
 }
 
 /* for DDLeftSideBar */
@@ -31,9 +35,9 @@ html, body {
   background-color: #EEE;
 }
 
-/* for DDCentralView */
+/* for DDPanelView */
 
-.DDCentralView {
+.DDPanelView {
   overflow: scroll;
   height: 100%;
   padding-right: 15px
@@ -41,6 +45,17 @@ html, body {
 
 /* for DDPageThumbNail */
 
-.DDPageThumbNail {
+.DDPageThumbNails {
   padding-top: 15px;
+}
+
+/* for DDPagePanelWell */
+
+.DDPagePanelWell {
+  height: 200px;
+  line-height: 162px;
+}
+
+.DDPagePanelWell i {
+  vertical-align: middle;
 }
