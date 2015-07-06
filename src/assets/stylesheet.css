@@ -12,6 +12,11 @@ html, body {
   padding: 15px;
 }
 
+.zeroMarginRow {
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
 .DDPanelView > div, .DDLeftSideBar > div {
   overflow: scroll;
 }
@@ -38,6 +43,14 @@ html, body {
 /* for DDPanelView */
 
 .DDPanelView {
+  overflow: scroll;
+  height: 100%;
+  padding-right: 15px
+}
+
+/* for DDPageView */
+
+.DDPageView {
   overflow: scroll;
   height: 100%;
   padding-right: 15px

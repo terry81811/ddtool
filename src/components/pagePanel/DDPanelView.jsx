@@ -22,8 +22,8 @@ let DDPanelView = React.createClass({
     });
 
     return (
-      <Row className={"DDPanelView"}>
-        <Col className={"padding15Col"}>
+      <Row className={"DDPanelView zeroMarginRow"}>
+        <Col>
           {PagePanels}
         </Col>
       </Row>

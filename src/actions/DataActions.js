@@ -16,7 +16,18 @@ let DataActions = {
     }).catch((err) => {
       console.log("Got an error: " + err);
     });
-  }
+  },
+  getColInfo(colId) {
+    WebAPIUtils.ColInfos.get(colId).then((colInfo) => {
+      this.dispatch(
+        DataActTypes.RECEIVE_COL_INFO,
+        {colInfo: colInfo}
+      );
+    }).catch((err) => {
+      console.log("Got an error: " + err);
+    });
+  },
+
 };
 
 module.exports = DataActions;

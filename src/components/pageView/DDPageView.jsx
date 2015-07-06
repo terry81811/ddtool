@@ -1,35 +1,38 @@
 const React = require("react");
 const C3Chart = require("c3-react");
-const _ = require("lodash");
 
 const {
   Row, Col,
-  Table
+  Input
 } = require("react-bootstrap");
 
+const DDPageViewStatTable = require("./DDPageViewStatTable.jsx");
+const DDPageViewControlPanel = require("./DDPageViewControlPanel.jsx");
+
+
+let Fluxxor = require("fluxxor");
+let FluxMixin = Fluxxor.FluxMixin(React);
+
 let DDPageView = React.createClass({
+  mixins: [FluxMixin],
   displayName: "DDPageView",
   propTypes: {
+    page: React.PropTypes.object,
     pages: React.PropTypes.array,
     params: React.PropTypes.object
   },
 
-  getInitialState: function() {
-    return ({page: null});
+  componentWillReceiveProps: function(nextProps) {
+    console.log("willReceive");
+    if(nextProps.params.id !== this.props.params.id){
+      this.getFlux().actions.DataActions.getColInfo(nextProps.params.id);
+    }
   },
 
-//  componentDidMount: function() {
-//    let _this = this;
-//    let pageIndex = _.findIndex(this.props.pages, function(page) {
-//      return page.id == _this.props.params.id;
-//    });
-//    let page = this.props.pages[pageIndex];
-//    console.log(_this.props.params.id);
-//    console.log(this.props.pages);
-//    console.log(pageIndex);
-//    console.log(page);
-//    this.setState({page: page});
-//  },
+  componentDidMount: function() {
+    this.getFlux().actions.DataActions.getColInfo(this.props.params.id);
+    console.log("did mount");
+  },
 
   render: function() {
     let data = [
@@ -56,86 +59,53 @@ let DDPageView = React.createClass({
         left: 40,
         right: 10
       },
-      size: {
-        width: 400,
-        height: 320
-      },
       grid: {
         y: true
       },
       axisLabel: {
         x: "x軸",
         y: "y軸"
-      },
-      onClick: function(d) {
-        let categories = this.categories();
-        console.log(d);
-        console.log("you clicked {" + d.name + ": " + categories[d.x] + ": " + d.value + "}");
       }
     };
 
-    let _this = this;
-    let pageIndex = _.findIndex(this.props.pages, function(page) {
-      return page.id == _this.props.params.id;
-    });
-    let page = this.props.pages[pageIndex];
+    if(this.props.page === null){
+      return <h3>no!</h3>;
+    }else{
+      return (
+        <div className={"DDPageView"}>
+          <Row className={"zeroMarginRow"}>
+            <h3>{this.props.page.humanName}</h3>
+            <Col md={6}>
+              <Row className={"zeroMarginRow"}>
+                <Input  style={{width:"25%"}}
+                        className={"pull-right"}
+                        type='select' placeholder='select chart type'>
+                  <option value='select'>barChart</option>
+                  <option value='pie'>pieChart</option>
+                  <option value='line'>lineChart</option>
+                </Input>
+              </Row>
+              <C3Chart  data={data}
+                        type={"bar"}
+                        options={options}/>
+            </Col>
+            <Col md={6}>
+              <Row className={"zeroMarginRow"}>
+                <Col>
+                  <DDPageViewStatTable page={this.props.page}/>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
 
+          <Row className={"zeroMarginRow"}>
+            <DDPageViewControlPanel page={this.props.page}/>
+          </Row>
+        </div>
 
-    return (
-      <Row>
-      <h3>{page.humanName}</h3>
-        <Col md={4}>
-          <C3Chart  data={data}
-                    type={"bar"}
-                    options={options}/>
-        </Col>
-        <Col md={3}>
-          <Table striped bordered condensed hover>
-            <tbody>
-              <tr>
-                <td>Type</td>
-                <td>{page.contentType}</td>
-              </tr>
-              <tr>
-                <td>True</td>
-                <td>{page.statsTrueCount}</td>
-              </tr>
-              <tr>
-                <td>False</td>
-                <td>{page.statsFalseCount}</td>
-              </tr>
-              <tr>
-                <td>Uniq. Count</td>
-                <td>{page.statsUniqCount}</td>
-              </tr>
-            </tbody>
-          </Table>
-        </Col>
-        <Col md={3}>
-          <Table striped bordered condensed hover>
-            <tbody>
-              <tr>
-                <td>min</td>
-                <td>{page.statsMin}</td>
-              </tr>
-              <tr>
-                <td>max</td>
-                <td>{page.statsMax}</td>
-              </tr>
-              <tr>
-                <td>most freq val</td>
-                <td>{page.statsValMostFreq}</td>
-              </tr>
-              <tr>
-                <td>most freq num</td>
-                <td>{page.statsNumMostFreq}</td>
-              </tr>
-            </tbody>
-          </Table>
-        </Col>
-      </Row>
+      );
+    }
 
-    );
   }
 });
 

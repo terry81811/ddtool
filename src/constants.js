@@ -19,6 +19,7 @@ module.exports = {
   ActTypes: {
     Data: scopedKeyMirror("DATA", {
       RECEIVE_ALL_COL_INFOS: null,
+      RECEIVE_COL_INFO: null,
     }),
   },
 

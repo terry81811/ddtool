@@ -80,6 +80,9 @@ let asyncPut = function(url, payload) {
 // backend's resources.
 module.exports = {
   ColInfos: {
+    get(id) {
+      return asyncGet(Const.API.root + "col_infos/" + id);
+    },
     getAll() {
       return asyncGet(Const.API.root + "col_infos");
     },
