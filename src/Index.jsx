@@ -55,14 +55,14 @@ let Index = React.createClass({
 
   render: function() {
     let pages = this.state.DataStore.colInfos;
-    let page = this.state.DataStore.colInfo;
+    let statInfo = this.state.DataStore.statInfo;
     return (
       <Row className={"DDWrapper"}>
         <Col md={2}>
           <DDLeftSideBar pages={pages}/>
         </Col>
         <Col md={10}>
-          <RouteHandler pages={pages} page={page}/>
+          <RouteHandler pages={pages} statInfo={statInfo}/>
         </Col>
       </Row>
     );

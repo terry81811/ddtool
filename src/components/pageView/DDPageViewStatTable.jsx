@@ -11,7 +11,7 @@ let DDPageViewStatTable = React.createClass({
   mixins: [FluxMixin],
   displayName: "DDPageViewStatTable",
   propTypes: {
-    page: React.PropTypes.object,
+    statInfo: React.PropTypes.object,
   },
   render: function() {
 
@@ -21,35 +21,35 @@ let DDPageViewStatTable = React.createClass({
               <tbody>
                 <tr>
                   <td>Type</td>
-                  <td>{this.props.page.contentType}</td>
+                  <td>{this.props.statInfo.contentType}</td>
                 </tr>
                 <tr>
                   <td>True</td>
-                  <td>{this.props.page.statsTrueCount}</td>
+                  <td>{this.props.statInfo.statsTrueCount}</td>
                 </tr>
                 <tr>
                   <td>False</td>
-                  <td>{this.props.page.statsFalseCount}</td>
+                  <td>{this.props.statInfo.statsFalseCount}</td>
                 </tr>
                 <tr>
                   <td>Uniq. Count</td>
-                  <td>{this.props.page.statsUniqCount}</td>
+                  <td>{this.props.statInfo.statsUniqCount}</td>
                 </tr>
                 <tr>
                   <td>min</td>
-                  <td>{this.props.page.statsMin}</td>
+                  <td>{this.props.statInfo.statsMin}</td>
                 </tr>
                 <tr>
                   <td>max</td>
-                  <td>{this.props.page.statsMax}</td>
+                  <td>{this.props.statInfo.statsMax}</td>
                 </tr>
                 <tr>
                   <td>most freq val</td>
-                  <td>{this.props.page.statsValMostFreq}</td>
+                  <td>{this.props.statInfo.statsValMostFreq}</td>
                 </tr>
                 <tr>
                   <td>most freq num</td>
-                  <td>{this.props.page.statsNumMostFreq}</td>
+                  <td>{this.props.statInfo.statsNumMostFreq}</td>
                 </tr>
               </tbody>
             </Table>

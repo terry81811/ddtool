@@ -18,14 +18,45 @@ let DataActions = {
     });
   },
   getColInfo(colId) {
-    WebAPIUtils.ColInfos.get(colId).then((colInfo) => {
+//    WebAPIUtils.ColInfos.get(colId).then((statInfo) => {
+//      console.log(statInfo);
+//      this.dispatch(
+//        DataActTypes.RECEIVE_COL_INFO,
+//        {statInfo: statInfo}
+//      );
+//    }).catch((err) => {
+//      console.log("Got an error: " + err);
+//    });
+
+      let statInfo = {
+        id: 12,
+        humanName: "消費卡別",
+        codeName: "col_11",
+        contentType: "STRING",
+        colDefinition: " ",
+        type: "DefaultCol",
+        paramsPositions: [ ],
+        tableSetting: [ ],
+        statsTrueCount: 1,
+        statsFalseCount: null,
+        statsMin: null,
+        statsMax: null,
+        statsUniqCount: null,
+        statsValMostFreq: null,
+        statsNumMostFreq: null,
+        targetTable: {
+          id: 1,
+          humanName: "aegis",
+          codeName: "aegis",
+          filter: " ",
+          groupers: [ ],
+          parentTableId: null
+        }
+      };
       this.dispatch(
         DataActTypes.RECEIVE_COL_INFO,
-        {colInfo: colInfo}
+        {statInfo: statInfo}
       );
-    }).catch((err) => {
-      console.log("Got an error: " + err);
-    });
   },
 
 };

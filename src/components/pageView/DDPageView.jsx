@@ -17,7 +17,7 @@ let DDPageView = React.createClass({
   mixins: [FluxMixin],
   displayName: "DDPageView",
   propTypes: {
-    page: React.PropTypes.object,
+    statInfo: React.PropTypes.object,
     pages: React.PropTypes.array,
     params: React.PropTypes.object
   },
@@ -68,14 +68,20 @@ let DDPageView = React.createClass({
       }
     };
 
-    if(this.props.page === null){
+    if(this.props.statInfo === null){
       return <h3>no!</h3>;
     }else{
       return (
         <div className={"DDPageView"}>
           <Row className={"zeroMarginRow"}>
-            <h3>{this.props.page.humanName}</h3>
+            <h3>{this.props.statInfo.humanName}</h3>
             <Col md={6}>
+
+              <DDPageViewControlPanel statInfo={this.props.statInfo}/>
+
+            </Col>
+            <Col md={6}>
+
               <Row className={"zeroMarginRow"}>
                 <Input  style={{width:"25%"}}
                         className={"pull-right"}
@@ -88,19 +94,14 @@ let DDPageView = React.createClass({
               <C3Chart  data={data}
                         type={"bar"}
                         options={options}/>
-            </Col>
-            <Col md={6}>
               <Row className={"zeroMarginRow"}>
                 <Col>
-                  <DDPageViewStatTable page={this.props.page}/>
+                  <DDPageViewStatTable statInfo={this.props.statInfo}/>
                 </Col>
               </Row>
             </Col>
           </Row>
 
-          <Row className={"zeroMarginRow"}>
-            <DDPageViewControlPanel page={this.props.page}/>
-          </Row>
         </div>
 
       );
