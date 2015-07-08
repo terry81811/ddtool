@@ -46,6 +46,16 @@ let DDPageViewControlPanel = React.createClass({
     }
   },
 
+  whereMapping: function(where){
+    let mapping = {
+      lt: "<",
+      gt: ">",
+      eq: "=",
+      not: "!="
+    };
+    return mapping[where];
+  },
+
   render: function() {
 
     let formOptions = { //keep rendering-purpose material in render()
@@ -66,14 +76,19 @@ let DDPageViewControlPanel = React.createClass({
       return <DDControlPanelFilterForm key={key} index={key} filter={filter} colOptions={formOptions.columns}/>;
     });
 
+    let filterDesc = _.map(this.state.PanelStore.filters, (filter, key)=>{
+      return <span key={key}><br/>Where {filter.humanName} {this.whereMapping(filter.where)} {filter.target}</span>;
+    });
+
     return (
       <div>
         <Well>
-          <code>Select {this.state.PanelStore.aggregator}
+          <code><span>Select {this.state.PanelStore.aggregator}
             ("{this.state.PanelStore.measurement ? this.state.PanelStore.measurement.humanName : ""}")
-            Group By {this.props.statInfo.humanName}
+            Group By {this.props.statInfo.humanName}</span>
+          {filterDesc}
           </code>
-          <code><br/>Where 訂單金額 > </code>
+
         </Well>
         <form className='form-horizontal'>
           <Row>
@@ -96,36 +111,6 @@ let DDPageViewControlPanel = React.createClass({
               />
             </Col>
           </Row>
-
-          <Row style={{marginTop: "10px"}}>
-            <Col xs={2}>
-              <b>Filters</b>
-              <a href={"#"}>
-                <i className={"fa fa-plus fa-fw"}></i>
-              </a>
-            </Col>
-            <Col xs={5}>
-              <Select
-                value={this.state.PanelStore.measurement ? this.state.PanelStore.measurement.humanName : ""}
-                placeholder="請選擇 Column"
-                name="form-field-name"
-                options={formOptions.columns}
-                onChange={this.changeHandler.measurement.bind(this)}
-              />
-            </Col>
-            <Col xs={2}>
-              <Select
-                placeholder=">"
-                options={formOptions.constraints}
-                onChange={this.logChange}
-                clearable={false}
-              />
-            </Col>
-            <Col xs={3}>
-              <input style={{height:"38px"}} type='text' className='form-control' />
-            </Col>
-          </Row>
-
 
           {filtersRows}
 

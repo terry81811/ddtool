@@ -27,6 +27,35 @@ let DDControlPanelFilterForm = React.createClass({
     console.log(event.target.value);
   },
 
+  handleDeleteFilter: function(index){
+    console.log(index);
+  },
+
+  handleCreateFilter: function(){
+    console.log("add!");
+  },
+
+  renderLabel: function() {
+    if(this.props.index === 0){
+      return (
+        <Col xs={2}>
+          <b>Filters</b>
+          <a className={"anchor-cursor"} onClick={this.handleCreateFilter}>
+            <i className={"fa fa-plus fa-fw"}></i>
+          </a>
+        </Col>
+      );
+    }else{
+      return (
+        <Col xs={2}>
+          <a className={"anchor-cursor"} onClick={this.handleDeleteFilter.bind(null, this.props.index)}>
+            <i className={"fa fa-times fa-fw"}></i>
+          </a>
+        </Col>
+      );
+    }
+  },
+
   render: function() {
     let constraintsOptions = [
       {label: ">", value: "gt"},
@@ -37,12 +66,7 @@ let DDControlPanelFilterForm = React.createClass({
 
     return (
           <Row style={{marginTop: "10px"}}>
-            <Col xs={2}>
-              <b>{this.props.index}</b>
-              <a href={"#"}>
-                <i className={"fa fa-plus fa-fw"}></i>
-              </a>
-            </Col>
+            {this.renderLabel()}
             <Col xs={5}>
               <Select
                 value={this.props.filter ? this.props.filter.humanName : ""}
@@ -64,7 +88,7 @@ let DDControlPanelFilterForm = React.createClass({
             <Col xs={3}>
               <input  style={{height:"38px"}} type='text' className='form-control'
                       defaultValue={this.props.filter ? this.props.filter.target : ""}
-                      onChange={this.handleTargetChange.bind(null, this.props.index)}
+                      onBlur={this.handleTargetChange.bind(null, this.props.index)}
                       />
             </Col>
           </Row>
