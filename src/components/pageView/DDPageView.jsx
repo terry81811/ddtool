@@ -35,42 +35,35 @@ let DDPageView = React.createClass({
   },
 
   render: function() {
-    let data = [
-      {
-        key: "dataSource1",
-        values: [
-          {label: "A", value: 3},
-          {label: "B", value: 4}
-        ]
-      },
-      {
-        key: "dataSource2",
-        values: [
-          {label: "X", value: 7},
-          {label: "Y", value: 8}
-        ]
-      }
-    ];
-
-    let options = {
-      padding: {
-        top: 20,
-        bottom: 20,
-        left: 40,
-        right: 10
-      },
-      grid: {
-        y: true
-      },
-      axisLabel: {
-        x: "x軸",
-        y: "y軸"
-      }
-    };
 
     if(this.props.statInfo === null){
       return <h3>no!</h3>;
     }else{
+
+      let data = [
+        {
+          key: "Count"
+        }
+      ];
+      console.log(this.props);
+      data[0].values = this.props.statInfo.stat.general.values;
+
+      let options = {
+        padding: {
+          top: 20,
+          bottom: 20,
+          left: 40,
+          right: 10
+        },
+        grid: {
+          y: true
+        },
+        axisLabel: {
+          x: "Categories",
+          y: "Count"
+        }
+      };
+
       return (
         <div className={"DDPageView"}>
           <Row className={"zeroMarginRow"}>
