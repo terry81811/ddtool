@@ -55,10 +55,10 @@ let DDPageViewStatTable = React.createClass({
       <Table striped bordered condensed hover>
         <tr>
           <td width="20%">
-              <DropdownButton title={"Top "+ statRows.length}>
-                <MenuItem eventKey='1'>5</MenuItem>
-                <MenuItem eventKey='2'>4</MenuItem>
-              </DropdownButton>
+            <DropdownButton title={"Top "+ statRows.length}>
+              <MenuItem eventKey='1'>5</MenuItem>
+              <MenuItem eventKey='2'>4</MenuItem>
+            </DropdownButton>
           </td>
           <td>Count</td><td>%</td>
           <td width="20%">
@@ -92,7 +92,13 @@ let DDPageViewStatTable = React.createClass({
           <td>Std.</td><td>{statInfo.stat.numerical.std}</td>
         </tr>
         <tr>
-          <td>MAX 5</td><td>{topItems.join(", ")}</td>
+          <td>
+            <DropdownButton title={"Max "+ topItems.length}>
+              <MenuItem eventKey='1'>5</MenuItem>
+              <MenuItem eventKey='2'>4</MenuItem>
+            </DropdownButton>
+          </td>
+          <td>{topItems.join(", ")}</td>
         </tr>
         <tr>
           <td>min 5</td><td>{lastItems.join(", ")}</td>

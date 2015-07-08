@@ -1,85 +1,140 @@
 const React = require("react");
-
+const _ = require("lodash");
 const {
   Row, Col,
-  Input,
-  Well, Button
+  Well, Button, ButtonToolbar
 } = require("react-bootstrap");
 
+const Select = require("react-select");
+
 let Fluxxor = require("fluxxor");
-let FluxMixin = Fluxxor.FluxMixin(React);
+let FluxMixin = Fluxxor.FluxMixin(React),
+    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+
+const DDControlPanelFilterForm = require("./DDControlPanelFilterForm.jsx");
 
 let DDPageViewControlPanel = React.createClass({
-  mixins: [FluxMixin],
+  mixins: [FluxMixin, StoreWatchMixin("PanelStore")],
   displayName: "DDPageViewControlPanel",
   propTypes: {
-    statInfo: React.PropTypes.object,
+    cols: React.PropTypes.array,  //for form selector options
+    statInfo: React.PropTypes.object, //for initial form inputs
   },
+
+  getStateFromFlux: function() {
+    let flux = this.getFlux();
+    return {
+      PanelStore: flux.store("PanelStore").getState(),  //get form inpts from stats, apart from selected statInfo props
+    };
+  },
+
+  componentWillReceiveProps: function(nextProps) {  //should do this because we can assess the page directly by url
+    if(nextProps.statInfo && nextProps.statInfo.id !== this.props.statInfo.id){
+      this.getFlux().actions.PanelActions.setInitialValues(nextProps.statInfo);
+    }
+  },
+
+  changeHandler: {
+    measurement: function(o) {
+      let col = _.find(this.props.cols, (col)=>{
+        return Number(col.id) === Number(o);
+      });
+      this.getFlux().actions.PanelActions.updateMeasurement(col);
+    },
+    aggregator: function(o) {
+      this.getFlux().actions.PanelActions.updateAggregator(o);
+    }
+  },
+
   render: function() {
+
+    let formOptions = { //keep rendering-purpose material in render()
+      aggregators: [
+        {label: "count", value: "count"},
+        {label: "distinctCount", value: "distinctCount"},
+        {label: "sum", value: "sum"},
+        {label: "avg", value: "avg"},
+        {label: "max", value: "max"},
+        {label: "min", value: "min"}
+      ],
+      columns: _.map(this.props.cols, function(col){
+        return {value: col.id, label: col.humanName};
+      }),
+    };
+
+    let filtersRows = _.map(this.state.PanelStore.filters, (filter, key)=>{
+      return <DDControlPanelFilterForm key={key} index={key} filter={filter} colOptions={formOptions.columns}/>;
+    });
 
     return (
       <div>
-      <Well>
-          <code>Select ("") Group By {this.props.statInfo.humanName}</code>
-          <code>Where 訂單金額 > </code>
-      </Well>
-          <form className='form-horizontal'>
+        <Well>
+          <code>Select {this.state.PanelStore.aggregator}
+            ("{this.state.PanelStore.measurement ? this.state.PanelStore.measurement.humanName : ""}")
+            Group By {this.props.statInfo.humanName}
+          </code>
+          <code><br/>Where 訂單金額 > </code>
+        </Well>
+        <form className='form-horizontal'>
+          <Row>
+            <Col xs={2}><b>Measurement</b></Col>
+            <Col xs={5}>
+              <Select
+                value={this.state.PanelStore.measurement ? this.state.PanelStore.measurement.humanName : ""}
+                placeholder="請選擇 Column"
+                name="form-field-name"
+                options={formOptions.columns}
+                onChange={this.changeHandler.measurement.bind(this)}
+              />
+            </Col>
+            <Col xs={5}>
+              <Select
+                value={this.state.PanelStore.aggregator}
+                placeholder="請選擇 aggregators"
+                options={formOptions.aggregators}
+                onChange={this.changeHandler.aggregator.bind(this)}
+              />
+            </Col>
+          </Row>
 
-            <Row>
-              <Col xs={6}>
-                 <Input label='Measurement' labelClassName='col-xs-4' wrapperClassName='col-xs-8'
-                        type='select' placeholder='select chart type'>
-                  <option value='select'>序號(PK)</option>
-                  <option value='pie'>訂單金額</option>
-                  <option value='line'>子女數</option>
-                </Input>
-              </Col>
-              <Col xs={6}>
-                <Input wrapperClassName='col-xs-10'
-                        type='select' placeholder='select chart type'>
-                  <option value='select'>Distinct Count</option>
-                  <option value='pie'>Average</option>
-                  <option value='line'>Sum</option>
-                </Input>
-              </Col>
-            </Row>
+          <Row style={{marginTop: "10px"}}>
+            <Col xs={2}>
+              <b>Filters</b>
+              <a href={"#"}>
+                <i className={"fa fa-plus fa-fw"}></i>
+              </a>
+            </Col>
+            <Col xs={5}>
+              <Select
+                value={this.state.PanelStore.measurement ? this.state.PanelStore.measurement.humanName : ""}
+                placeholder="請選擇 Column"
+                name="form-field-name"
+                options={formOptions.columns}
+                onChange={this.changeHandler.measurement.bind(this)}
+              />
+            </Col>
+            <Col xs={2}>
+              <Select
+                placeholder=">"
+                options={formOptions.constraints}
+                onChange={this.logChange}
+                clearable={false}
+              />
+            </Col>
+            <Col xs={3}>
+              <input style={{height:"38px"}} type='text' className='form-control' />
+            </Col>
+          </Row>
 
 
-            <Row>
-              <Col xs={2}>
-                <b>Filters</b>
-                <a href={"#"}>
-                  <i className={"fa fa-plus fa-fw"}></i>
-                </a>
-              </Col>
-              <Col xs={4}>
-                <Input  wrapperClassName='col-xs-12'
-                        type='select' placeholder='select chart type'>
-                  <option value='pie'>訂單金額</option>
-                  <option value='line'>子女數</option>
-                </Input>
-              </Col>
-              <Col xs={2}>
-                <Input
-                        type='select' placeholder='select chart type'>
-                  <option value='pie'> {">"} </option>
-                  <option value='line'> {"<"} </option>
-                  <option value='select'> eq.</option>
-                  <option value='line'> not eq. </option>
-                </Input>
-              </Col>
-              <Col xs={3}>
-                <input type='text' className='form-control' />
-              </Col>
-              <Col xs={1}>
-                <a href={"#"}>
-                  <i className={"fa fa-times fa-fw"}></i>
-                </a>
-              </Col>
-            </Row>
-            <Button bsStyle={"primary"} className={"pull-right"}><i className={"fa fa-play fa-fw"}></i> Run</Button>
-          </form>
-          </div>
+          {filtersRows}
+
+          <ButtonToolbar className={"pull-right"} style={{marginTop: "10px"}}>
+            <Button bsStyle={"danger"}><i className={"fa fa-times fa-fw"}></i> Reset</Button>
+            <Button bsStyle={"primary"}><i className={"fa fa-play fa-fw"}></i> Run</Button>
+          </ButtonToolbar>
+        </form>
+      </div>
 
     );
 

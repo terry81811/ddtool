@@ -45,7 +45,6 @@ let DDPageView = React.createClass({
           key: "Count"
         }
       ];
-      console.log(this.props);
       data[0].values = this.props.statInfo.stat.general.values;
 
       let options = {
@@ -70,7 +69,7 @@ let DDPageView = React.createClass({
             <h3>{this.props.statInfo.humanName}</h3>
             <Col md={6}>
 
-              <DDPageViewControlPanel statInfo={this.props.statInfo}/>
+              <DDPageViewControlPanel statInfo={this.props.statInfo} cols={this.props.pages}/>
 
             </Col>
             <Col md={6}>

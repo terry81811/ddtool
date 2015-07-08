@@ -1,5 +1,6 @@
 require("./assets/stylesheet.css");
 require("c3-react/node_modules/c3/c3.min.css");
+require("react-select/dist/default.css");
 
 let React = require("react");
 let Router = require("react-router");
@@ -19,14 +20,18 @@ const DDPageView = require("./components/pageView/DDPageView.jsx");
 
 // Initialize Fluxxor
 // Stores
+let PanelStore = require("./stores/PanelStore");
 let DataStore = require("./stores/DataStore");
 let stores = {
-  DataStore: new DataStore()
+  DataStore: new DataStore(),
+  PanelStore: new PanelStore(),
 };
 
 // Actions
 let DataActions = require("./actions/DataActions");
+let PanelActions = require("./actions/PanelActions");
 let actions = {
+  PanelActions: PanelActions,
   DataActions: DataActions
 };
 
@@ -40,7 +45,7 @@ flux.on("dispatch", function(type, payload) {
 
 let Index = React.createClass({
   displayName: "Index",
-  mixins: [FluxMixin, StoreWatchMixin("DataStore")],
+  mixins: [FluxMixin, StoreWatchMixin("DataStore", "PanelStore")],
 
   getStateFromFlux: function() {
     let flux = this.getFlux();

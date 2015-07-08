@@ -21,6 +21,12 @@ module.exports = {
       RECEIVE_ALL_COL_INFOS: null,
       RECEIVE_COL_INFO: null,
     }),
+    Panel: scopedKeyMirror("Panel", {
+      SET_INITIAL_VALUES: null,
+      UPDATE_FILTERS: null,
+      UPDATE_MEASUREMENT: null,
+      UPDATE_AGGREGATOR: null
+    }),
   },
 
   CHANGE_EVENT: "change",

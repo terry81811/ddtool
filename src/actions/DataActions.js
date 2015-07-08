@@ -3,6 +3,7 @@
 const Const = require("../constants");
 
 const DataActTypes = Const.ActTypes.Data;
+const PanelActTypes = Const.ActTypes.Panel;
 
 const WebAPIUtils = require("../utils/WebAPIUtils");
 
@@ -64,7 +65,7 @@ let DataActions = {
         measurement: {
           colId: 15,
           humanName: "子女數",
-          aggregator: "average"
+          aggregator: "avg"
         },
         stat: {
           general: {
@@ -84,13 +85,21 @@ let DataActions = {
             mean: 420,
             std: 33,
           },
-
         }
       };
       this.dispatch(
         DataActTypes.RECEIVE_COL_INFO,
         {statInfo: statInfo}
       );
+      this.dispatch(
+        PanelActTypes.SET_INITIAL_VALUES,
+        {
+          filters: statInfo.filters,
+          measurement: statInfo.measurement,
+          aggregator: statInfo.measurement.aggregator
+        }
+      );
+
   },
 
 };
