@@ -47,19 +47,19 @@ let DataActions = {
             colId: 4,
             humanName: "訂單金額",
             where: "gt",
-            target: "2000"
+            value: "2000"
           },
           {
             colId: 4,
             humanName: "訂單金額",
             where: "lt",
-            target: "10000"
+            value: "10000"
           },
           {
             colId: 13,
             humanName: "性別",
             where: "eq",
-            target: "F"
+            value: "F"
           },
         ],
         measurement: {

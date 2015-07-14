@@ -10,29 +10,41 @@ const FluxMixin = Fluxxor.FluxMixin(React),
     StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
 let DDControlPanelFilterForm = React.createClass({
+  mixins: [FluxMixin],
   displayName: "DDControlPanelFilterForm",
   propTypes: {
     filter: React.PropTypes.object.isRequired,
     colOptions: React.PropTypes.array.isRequired,
-    index: React.PropTypes.number.isRequired
+    index: React.PropTypes.number.isRequired,
+    cols: React.PropTypes.array.isRequired
   },
 
-  handleFilterChange: function(index, value) {
-    console.log(index);
-    console.log(value);
+  handleFilterColChange: function(index, value) {
+    let col = _.find(this.props.cols, (col)=>{
+      return Number(col.id) === Number(value);
+    });
+    this.getFlux().actions.PanelActions.updateFilterCol(index, col);  //col === undefined if not found
   },
 
-  handleTargetChange: function(index, event) {
-    console.log(index);
-    console.log(event.target.value);
+  handleFilterWhereChange: function(index, value) {
+    this.getFlux().actions.PanelActions.updateFilterWhere(index, value);
+  },
+
+  handleFilterValueChange: function(index, event) {
+    console.log(typeof event);
+    if(typeof event === "object"){
+      this.getFlux().actions.PanelActions.updateFilterValue(index, event.target.value);
+    }else if(typeof event === "string"){
+      this.getFlux().actions.PanelActions.updateFilterValue(index, event);
+    }
   },
 
   handleDeleteFilter: function(index){
-    console.log(index);
+    this.getFlux().actions.PanelActions.deleteFilter(index);
   },
 
   handleCreateFilter: function(){
-    console.log("add!");
+    this.getFlux().actions.PanelActions.createFilter();
   },
 
   renderLabel: function() {
@@ -42,6 +54,9 @@ let DDControlPanelFilterForm = React.createClass({
           <b>Filters</b>
           <a className={"anchor-cursor"} onClick={this.handleCreateFilter}>
             <i className={"fa fa-plus fa-fw"}></i>
+          </a>
+          <a className={"anchor-cursor"} onClick={this.handleDeleteFilter.bind(null, this.props.index)}>
+            <i className={"fa fa-times fa-fw"}></i>
           </a>
         </Col>
       );
@@ -57,12 +72,69 @@ let DDControlPanelFilterForm = React.createClass({
   },
 
   render: function() {
-    let constraintsOptions = [
-      {label: ">", value: "gt"},
-      {label: "<", value: "lt"},
-      {label: "eq.", value: "eq"},
-      {label: "not eq.", value: "not"}
-    ];
+
+    let col = _.find(this.props.cols, (col)=>{
+      return Number(col.id) === Number(this.props.filter.colId);
+    });
+
+
+    let constraintsOptions = {
+      numerical: [
+        {label: ">", value: "gt"},
+        {label: "<", value: "lt"},
+        {label: "eq.", value: "eq"},
+        {label: "not eq.", value: "not"}
+      ],
+      categorical: [
+        {label: "eq.", value: "eq"},
+        {label: "not eq.", value: "not"}
+      ]
+    };
+
+    let filterOptionsForm = null;
+    if(col.contentType === "INTEGER" || col.contentType === "FLOAT"){ //col is numerical
+      filterOptionsForm = (
+        <div>
+          <Col xs={2}>
+            <Select
+              value={this.props.filter ? this.props.filter.where : ""}
+              placeholder=">"
+              options={constraintsOptions.numerical}
+              onChange={this.handleFilterWhereChange.bind(null, this.props.index)}
+              clearable={false}
+            />
+          </Col>
+          <Col xs={3}>
+            <input  style={{height:"38px"}} type='text' className='form-control'
+                    defaultValue={this.props.filter ? this.props.filter.value : ""}
+                    onBlur={this.handleFilterValueChange.bind(null, this.props.index)}
+                    />
+          </Col>
+        </div>
+      );
+    }else{  //col is categorical
+      filterOptionsForm = (
+        <div>
+          <Col xs={2}>
+            <Select
+              value={this.props.filter ? this.props.filter.where : ""}
+              placeholder=">"
+              options={constraintsOptions.categorical}
+              onChange={this.handleFilterWhereChange.bind(null, this.props.index)}
+              clearable={false}
+            />
+          </Col>
+          <Col xs={3}>
+            <Select
+              value={this.props.filter ? this.props.filter.value : ""}
+              options={constraintsOptions.categorical}
+              onChange={this.handleFilterValueChange.bind(null, this.props.index)}
+              clearable={false}
+            />
+          </Col>
+        </div>
+      );
+    }
 
     return (
           <Row style={{marginTop: "10px"}}>
@@ -73,24 +145,10 @@ let DDControlPanelFilterForm = React.createClass({
                 placeholder="請選擇 Column"
                 name="form-field-name"
                 options={this.props.colOptions}
-                onChange={this.handleFilterChange.bind(null, this.props.index)}
+                onChange={this.handleFilterColChange.bind(null, this.props.index)}
               />
             </Col>
-            <Col xs={2}>
-              <Select
-                value={this.props.filter ? this.props.filter.where : ""}
-                placeholder=">"
-                options={constraintsOptions}
-                onChange={this.logChange}
-                clearable={false}
-              />
-            </Col>
-            <Col xs={3}>
-              <input  style={{height:"38px"}} type='text' className='form-control'
-                      defaultValue={this.props.filter ? this.props.filter.target : ""}
-                      onBlur={this.handleTargetChange.bind(null, this.props.index)}
-                      />
-            </Col>
+            {filterOptionsForm}
           </Row>
     );
   }

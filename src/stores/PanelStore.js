@@ -1,4 +1,5 @@
 "use strict";
+const _ = require("lodash");
 
 const Fluxxor = require("fluxxor");
 const Const = require("../constants");
@@ -21,7 +22,12 @@ let PanelStore = Fluxxor.createStore({
         PanelActTypes.SET_INITIAL_VALUES, this.onSetInitialValues,
         PanelActTypes.UPDATE_FILTERS, this.onUpdateFilters,
         PanelActTypes.UPDATE_MEASUREMENT, this.onUpdateMeasurement,
-        PanelActTypes.UPDATE_AGGREGATOR, this.onUpdateAggregator
+        PanelActTypes.UPDATE_AGGREGATOR, this.onUpdateAggregator,
+        PanelActTypes.CREATE_FILTER, this.onCreateFilter,
+        PanelActTypes.DELETE_FILTER, this.onDeleteFilter,
+        PanelActTypes.UPDATE_FILTER_COL,  this.onUpdateFilterCol,
+        PanelActTypes.UPDATE_FILTER_WHERE, this.onUpdateFilteWhere,
+        PanelActTypes.UPDATE_FILTER_VALUE, this.onUpdateFilterValue
       );
     },
 
@@ -53,6 +59,51 @@ let PanelStore = Fluxxor.createStore({
 
     onUpdateAggregator: function(payload) {
       _aggregator = payload.aggregator;
+      this.emit(Const.CHANGE_EVENT);
+    },
+
+    onCreateFilter: function() {
+      _filters.push({
+        colId: null,
+        humanName: null,
+        where: null,
+        target: null
+      });
+      this.emit(Const.CHANGE_EVENT);
+    },
+
+    onDeleteFilter: function(payload) {
+      if(_filters.length <= 1){
+        _filters[0] = {
+          colId: null,
+          humanName: null,
+          where: null,
+          target: null
+        };
+      }else{
+        _.pullAt(_filters, payload.index);
+      }
+      this.emit(Const.CHANGE_EVENT);
+    },
+
+    onUpdateFilterCol: function(payload) {
+      if(payload.filter){
+        _filters[payload.index].colId = payload.filter.id;
+        _filters[payload.index].humanName = payload.filter.humanName;
+      }else{ //payload === undefined if not found (when click clear in)
+        _filters[payload.index].colId = null;
+        _filters[payload.index].humanName = null;
+      }
+      this.emit(Const.CHANGE_EVENT);
+    },
+
+    onUpdateFilteWhere: function(payload) {
+      _filters[payload.index].where = payload.whereExp;
+      this.emit(Const.CHANGE_EVENT);
+    },
+
+    onUpdateFilterValue: function(payload) {
+      _filters[payload.index].value = payload.value;
       this.emit(Const.CHANGE_EVENT);
     }
 

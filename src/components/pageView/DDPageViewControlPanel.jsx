@@ -39,7 +39,7 @@ let DDPageViewControlPanel = React.createClass({
       let col = _.find(this.props.cols, (col)=>{
         return Number(col.id) === Number(o);
       });
-      this.getFlux().actions.PanelActions.updateMeasurement(col);
+      this.getFlux().actions.PanelActions.updateMeasurement(col); //col === undefined if not found
     },
     aggregator: function(o) {
       this.getFlux().actions.PanelActions.updateAggregator(o);
@@ -73,11 +73,11 @@ let DDPageViewControlPanel = React.createClass({
     };
 
     let filtersRows = _.map(this.state.PanelStore.filters, (filter, key)=>{
-      return <DDControlPanelFilterForm key={key} index={key} filter={filter} colOptions={formOptions.columns}/>;
+      return <DDControlPanelFilterForm key={key} index={key} filter={filter} cols={this.props.cols} colOptions={formOptions.columns}/>;
     });
 
     let filterDesc = _.map(this.state.PanelStore.filters, (filter, key)=>{
-      return <span key={key}><br/>Where {filter.humanName} {this.whereMapping(filter.where)} {filter.target}</span>;
+      return <span key={key}><br/>Where {filter.humanName} {this.whereMapping(filter.where)} {filter.value}</span>;
     });
 
     return (

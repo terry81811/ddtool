@@ -25,7 +25,12 @@ module.exports = {
       SET_INITIAL_VALUES: null,
       UPDATE_FILTERS: null,
       UPDATE_MEASUREMENT: null,
-      UPDATE_AGGREGATOR: null
+      UPDATE_AGGREGATOR: null,
+      CREATE_FILTER: null,
+      DELETE_FILTER: null,
+      UPDATE_FILTER_COL: null,
+      UPDATE_FILTER_WHERE: null,
+      UPDATE_FILTER_VALUE: null
     }),
   },
 
