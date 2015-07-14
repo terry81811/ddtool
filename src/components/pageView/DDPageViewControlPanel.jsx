@@ -24,11 +24,11 @@ let DDPageViewControlPanel = React.createClass({
   getStateFromFlux: function() {
     let flux = this.getFlux();
     return {
-      PanelStore: flux.store("PanelStore").getState(),  //get form inpts from stats, apart from selected statInfo props
+      PanelStore: flux.store("PanelStore").getState(),  //get form inpts from stats, apart from inherited, selected statInfo props
     };
   },
 
-  componentWillReceiveProps: function(nextProps) {  //should do this because we can assess the page directly by url
+  componentWillReceiveProps: function(nextProps) {  //should do this because we can assess the page directly by url /page:id
     if(nextProps.statInfo && nextProps.statInfo.id !== this.props.statInfo.id){
       this.getFlux().actions.PanelActions.setInitialValues(nextProps.statInfo);
     }
@@ -39,7 +39,7 @@ let DDPageViewControlPanel = React.createClass({
       let col = _.find(this.props.cols, (col)=>{
         return Number(col.id) === Number(o);
       });
-      this.getFlux().actions.PanelActions.updateMeasurement(col); //col === undefined if not found
+      this.getFlux().actions.PanelActions.updateMeasurement(col); //col === undefined if not found, happens when click "clear"
     },
     aggregator: function(o) {
       this.getFlux().actions.PanelActions.updateAggregator(o);
@@ -122,7 +122,6 @@ let DDPageViewControlPanel = React.createClass({
       </div>
 
     );
-
 
   }
 });

@@ -92,13 +92,15 @@ let DDControlPanelFilterForm = React.createClass({
     };
 
     let filterOptionsForm = null;
-    if(col.contentType === "INTEGER" || col.contentType === "FLOAT"){ //col is numerical
+    if(!col){
+      filterOptionsForm = (<Col xs={5}/>);  //col is empty, show nothing
+    }else if(col.contentType === "INTEGER" || col.contentType === "FLOAT"){ //col is numerical
       filterOptionsForm = (
         <div>
           <Col xs={2}>
             <Select
               value={this.props.filter ? this.props.filter.where : ""}
-              placeholder=">"
+              placeholder="eq."
               options={constraintsOptions.numerical}
               onChange={this.handleFilterWhereChange.bind(null, this.props.index)}
               clearable={false}
@@ -118,7 +120,7 @@ let DDControlPanelFilterForm = React.createClass({
           <Col xs={2}>
             <Select
               value={this.props.filter ? this.props.filter.where : ""}
-              placeholder=">"
+              placeholder="eq."
               options={constraintsOptions.categorical}
               onChange={this.handleFilterWhereChange.bind(null, this.props.index)}
               clearable={false}

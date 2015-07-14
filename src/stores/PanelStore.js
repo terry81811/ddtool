@@ -90,9 +90,11 @@ let PanelStore = Fluxxor.createStore({
       if(payload.filter){
         _filters[payload.index].colId = payload.filter.id;
         _filters[payload.index].humanName = payload.filter.humanName;
-      }else{ //payload === undefined if not found (when click clear in)
+      }else{ //payload === undefined if not found (when click "clear")
         _filters[payload.index].colId = null;
         _filters[payload.index].humanName = null;
+        _filters[payload.index].where = null;
+        _filters[payload.index].value = null;
       }
       this.emit(Const.CHANGE_EVENT);
     },
