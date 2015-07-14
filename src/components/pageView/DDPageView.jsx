@@ -17,8 +17,9 @@ let DDPageView = React.createClass({
   mixins: [FluxMixin],
   displayName: "DDPageView",
   propTypes: {
+    cols: React.PropTypes.array,
     statInfo: React.PropTypes.object,
-    pages: React.PropTypes.array,
+    statInfos: React.PropTypes.array,
     params: React.PropTypes.object,
     misc: React.PropTypes.object
   },
@@ -26,12 +27,12 @@ let DDPageView = React.createClass({
   componentWillReceiveProps: function(nextProps) {
     console.log("willReceive");
     if(nextProps.params.id !== this.props.params.id){
-      this.getFlux().actions.DataActions.getColInfo(nextProps.params.id);
+      this.getFlux().actions.DataActions.getStatInfo(nextProps.params.id);
     }
   },
 
   componentDidMount: function() {
-    this.getFlux().actions.DataActions.getColInfo(this.props.params.id);
+    this.getFlux().actions.DataActions.getStatInfo(this.props.params.id);
     console.log("did mount");
   },
 

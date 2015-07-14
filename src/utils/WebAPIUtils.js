@@ -81,10 +81,18 @@ let asyncPut = function(url, payload) {
 module.exports = {
   ColInfos: {
     get(id) {
-      return asyncGet(Const.API.root + "col_infos/" + id);
+      return asyncGet(Const.API.stat + "col_infos/" + id);
     },
     getAll() {
-      return asyncGet(Const.API.root + "col_infos");
+      return asyncGet(Const.API.stat + "col_infos");
+    },
+  },
+  StatInfos: {
+    get(id) {
+      return asyncGet(Const.API.stat + "stat_infos/" + id);
+    },
+    getAll() {
+      return asyncGet(Const.API.stat + "stat_infos");
     },
   }
 };

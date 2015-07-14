@@ -16,7 +16,7 @@ let DDLeftSideBar = React.createClass({
   mixins: [FluxMixin],
   displayName: "DDLeftSideBar",
   propTypes: {
-    pages: React.PropTypes.array
+    statInfos: React.PropTypes.array
   },
 
   render: function() {
@@ -24,7 +24,7 @@ let DDLeftSideBar = React.createClass({
       <Row className={"DDLeftSideBar"}>
         <Col className={"padding15Col"}>
           <Panel>
-            <h4><a href={"#/"}>Pages</a> <Badge>{this.props.pages.length}</Badge>
+            <h4><a href={"#/"}>Pages</a> <Badge>{this.props.statInfos.length}</Badge>
               <a className={"pull-right anchor-cursor"}>+</a>
             </h4>
           </Panel>
@@ -36,7 +36,7 @@ let DDLeftSideBar = React.createClass({
               <MenuItem eventKey="3">Measurement</MenuItem>
             </DropdownButton>
           </ButtonToolbar>
-          <DDPageThumbNails pages = {this.props.pages}/>
+          <DDPageThumbNails statInfos = {this.props.statInfos}/>
         </Col>
       </Row>
     );

@@ -13,12 +13,13 @@ const FluxMixin = Fluxxor.FluxMixin(React),
 let DDPanelView = React.createClass({
   displayName: "DDPanelView",
   propTypes: {
-    pages: React.PropTypes.array
+    cols: React.PropTypes.array,
+    statInfos: React.PropTypes.array
   },
 
   render: function() {
-    let PagePanels = _.map(this.props.pages, function(page, key){
-      return <DDPagePanel key={key} page={page} />;
+    let PagePanels = _.map(this.props.statInfos, (statInfo, key) => {
+      return <DDPagePanel key={key} cols={this.props.cols} statInfo={statInfo}/>;
     });
 
     return (

@@ -18,8 +18,9 @@ let scopedKeyMirror = function(scope, obj) {
 module.exports = {
   ActTypes: {
     Data: scopedKeyMirror("DATA", {
+      RECEIVE_ALL_STAT_INFOS: null,
       RECEIVE_ALL_COL_INFOS: null,
-      RECEIVE_COL_INFO: null,
+      RECEIVE_STAT_INFO: null,
       UPDATE_CHART_TYPE: null
     }),
     Panel: scopedKeyMirror("Panel", {
@@ -38,7 +39,8 @@ module.exports = {
 
   CHANGE_EVENT: "change",
   API: {
-    root: "//docker.yoctol.com/api/"
+    root: "//docker.yoctol.com/api/",
+    stat: "http://192.168.1.138:3000/api/"
   },
 
 };

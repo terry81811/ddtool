@@ -55,20 +55,25 @@ let Index = React.createClass({
   },
 
   componentDidMount: function() {
-    this.getFlux().actions.DataActions.getAllColInfos();
+    this.getFlux().actions.DataActions.getAllResources();
+
+//    this.getFlux().actions.DataActions.getAllStatInfos();
+//    this.getFlux().actions.DataActions.getAllColInfos();
   },
 
   render: function() {
-    let pages = this.state.DataStore.colInfos;
+    let cols = this.state.DataStore.colInfos;
+    let statInfos = this.state.DataStore.statInfos;
     let statInfo = this.state.DataStore.statInfo;
     let misc = this.state.DataStore.misc;
+    console.log(this.state);
     return (
       <Row className={"DDWrapper"}>
         <Col md={2}>
-          <DDLeftSideBar pages={pages}/>
+          <DDLeftSideBar statInfos={statInfos}/>
         </Col>
         <Col md={10}>
-          <RouteHandler pages={pages} statInfo={statInfo} misc={misc}/>
+          <RouteHandler cols={cols} statInfos={statInfos} statInfo={statInfo} misc={misc}/>
         </Col>
       </Row>
     );
