@@ -46,6 +46,14 @@ let DDPageViewControlPanel = React.createClass({
     }
   },
 
+  resetFormHandler: function() {
+    this.getFlux().actions.DataActions.getColInfo(this.props.statInfo.id);  //reset colInfo resource
+  },
+
+  submitFormHandler: function() {
+    this.getFlux().actions.PanelActions.submitForm(this.props.statInfo);  //reset colInfo resource
+  },
+
   whereMapping: function(where){
     let mapping = {
       lt: "<",
@@ -88,8 +96,8 @@ let DDPageViewControlPanel = React.createClass({
             Group By {this.props.statInfo.humanName}</span>
           {filterDesc}
           </code>
-
         </Well>
+
         <form className='form-horizontal'>
           <Row>
             <Col xs={2}><b>Measurement</b></Col>
@@ -115,8 +123,8 @@ let DDPageViewControlPanel = React.createClass({
           {filtersRows}
 
           <ButtonToolbar className={"pull-right"} style={{marginTop: "10px"}}>
-            <Button bsStyle={"danger"}><i className={"fa fa-times fa-fw"}></i> Reset</Button>
-            <Button bsStyle={"primary"}><i className={"fa fa-play fa-fw"}></i> Run</Button>
+            <Button bsStyle={"danger"} onClick={this.resetFormHandler}><i className={"fa fa-times fa-fw"}></i> Reset</Button>
+            <Button bsStyle={"primary"} onClick={this.submitFormHandler}><i className={"fa fa-play fa-fw"}></i> Run</Button>
           </ButtonToolbar>
         </form>
       </div>

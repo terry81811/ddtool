@@ -6,6 +6,8 @@ const PanelActTypes = Const.ActTypes.Panel;
 
 let PanelActions = {
   setInitialValues(statInfo) {
+    console.log("in action");
+    console.log(statInfo);
     this.dispatch(
       PanelActTypes.SET_INITIAL_VALUES,
       {
@@ -77,6 +79,15 @@ let PanelActions = {
       {
         index: index,
         value: value
+      }
+    );
+  },
+
+  submitForm(statInfo) {
+    this.dispatch(
+      PanelActTypes.SUBMIT_FORM,
+      {
+        statInfo: statInfo
       }
     );
   }

@@ -20,6 +20,7 @@ module.exports = {
     Data: scopedKeyMirror("DATA", {
       RECEIVE_ALL_COL_INFOS: null,
       RECEIVE_COL_INFO: null,
+      UPDATE_CHART_TYPE: null
     }),
     Panel: scopedKeyMirror("Panel", {
       SET_INITIAL_VALUES: null,
@@ -30,7 +31,8 @@ module.exports = {
       DELETE_FILTER: null,
       UPDATE_FILTER_COL: null,
       UPDATE_FILTER_WHERE: null,
-      UPDATE_FILTER_VALUE: null
+      UPDATE_FILTER_VALUE: null,
+      SUBMIT_FORM: null
     }),
   },
 

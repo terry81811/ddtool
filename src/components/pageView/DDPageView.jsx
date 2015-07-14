@@ -1,9 +1,9 @@
 const React = require("react");
 const C3Chart = require("c3-react");
+const Select = require("react-select");
 
 const {
-  Row, Col,
-  Input
+  Row, Col
 } = require("react-bootstrap");
 
 const DDPageViewStatTable = require("./DDPageViewStatTable.jsx");
@@ -19,7 +19,8 @@ let DDPageView = React.createClass({
   propTypes: {
     statInfo: React.PropTypes.object,
     pages: React.PropTypes.array,
-    params: React.PropTypes.object
+    params: React.PropTypes.object,
+    misc: React.PropTypes.object
   },
 
   componentWillReceiveProps: function(nextProps) {
@@ -32,6 +33,10 @@ let DDPageView = React.createClass({
   componentDidMount: function() {
     this.getFlux().actions.DataActions.getColInfo(this.props.params.id);
     console.log("did mount");
+  },
+
+  handleChartTypeChange: function(value) {
+    this.getFlux().actions.DataActions.updateChartType(value);
   },
 
   render: function() {
@@ -63,28 +68,36 @@ let DDPageView = React.createClass({
         }
       };
 
+      let chartTypeOptions = [
+        {label: "Bar Chart", value: "bar"},
+        {label: "Pie Chart", value: "pie"},
+        {label: "Line Chart", value: "line"}
+      ];
+
       return (
         <div className={"DDPageView"}>
           <Row className={"zeroMarginRow"}>
+
             <h3>{this.props.statInfo.humanName}</h3>
             <Col md={6}>
-
               <DDPageViewControlPanel statInfo={this.props.statInfo} cols={this.props.pages}/>
-
             </Col>
-            <Col md={6}>
 
+            <Col md={6}>
               <Row className={"zeroMarginRow"}>
-                <Input  style={{width:"25%"}}
-                        className={"pull-right"}
-                        type='select' placeholder='select chart type'>
-                  <option value='select'>barChart</option>
-                  <option value='pie'>pieChart</option>
-                  <option value='line'>lineChart</option>
-                </Input>
+                <Col md={8}/>
+                <Col md={4}>
+                <Select
+                  value={this.props.misc.chartType}
+                  name="form-field-name"
+                  options={chartTypeOptions}
+                  onChange={this.handleChartTypeChange}
+                  clearable={false}
+                />
+                </Col>
               </Row>
               <C3Chart  data={data}
-                        type={"bar"}
+                        type={this.props.misc.chartType}
                         options={options}/>
               <Row className={"zeroMarginRow"}>
                 <Col>
@@ -92,8 +105,8 @@ let DDPageView = React.createClass({
                 </Col>
               </Row>
             </Col>
-          </Row>
 
+          </Row>
         </div>
 
       );

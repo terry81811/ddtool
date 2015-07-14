@@ -27,7 +27,8 @@ let PanelStore = Fluxxor.createStore({
         PanelActTypes.DELETE_FILTER, this.onDeleteFilter,
         PanelActTypes.UPDATE_FILTER_COL,  this.onUpdateFilterCol,
         PanelActTypes.UPDATE_FILTER_WHERE, this.onUpdateFilteWhere,
-        PanelActTypes.UPDATE_FILTER_VALUE, this.onUpdateFilterValue
+        PanelActTypes.UPDATE_FILTER_VALUE, this.onUpdateFilterValue,
+        PanelActTypes.SUBMIT_FORM, this.onSubmitForm
       );
     },
 
@@ -107,6 +108,10 @@ let PanelStore = Fluxxor.createStore({
     onUpdateFilterValue: function(payload) {
       _filters[payload.index].value = payload.value;
       this.emit(Const.CHANGE_EVENT);
+    },
+
+    onSubmitForm: function(payload) {
+      console.log(payload);
     }
 
 });

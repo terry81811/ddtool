@@ -101,6 +101,12 @@ let DataActions = {
       );
 
   },
+  updateChartType(chartType) {
+    this.dispatch(
+      DataActTypes.UPDATE_CHART_TYPE,
+      {chartType: chartType}
+    );
+  },
 
 };
 

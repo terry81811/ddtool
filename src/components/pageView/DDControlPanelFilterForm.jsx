@@ -19,6 +19,20 @@ let DDControlPanelFilterForm = React.createClass({
     cols: React.PropTypes.array.isRequired
   },
 
+  //We Keep this state {input: value} in component instead of stores because
+  //1. It is only the current text input, not the final value, therefore
+  //2. every onChange will only trigger local state change; onBlur will trigger store state chanege
+  //3. input DOM value will reference to local state
+  getInitialState: function() {
+    let value = this.props.filter ? this.props.filter.value : "";
+    return {input: value};
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    let value = nextProps.filter ? nextProps.filter.value : "";
+    this.setState({input: value});
+  },
+
   handleFilterColChange: function(index, value) {
     let col = _.find(this.props.cols, (col)=>{
       return Number(col.id) === Number(value);
@@ -30,12 +44,15 @@ let DDControlPanelFilterForm = React.createClass({
     this.getFlux().actions.PanelActions.updateFilterWhere(index, value);
   },
 
+  handleFilterValueBlur: function(index) {
+    this.getFlux().actions.PanelActions.updateFilterValue(index, this.state.input);
+  },
+
   handleFilterValueChange: function(index, event) {
-    console.log(typeof event);
     if(typeof event === "object"){
-      this.getFlux().actions.PanelActions.updateFilterValue(index, event.target.value);
+      this.setState({ input: event.target.value });
     }else if(typeof event === "string"){
-      this.getFlux().actions.PanelActions.updateFilterValue(index, event);
+      this.setState({ input: event });
     }
   },
 
@@ -77,7 +94,6 @@ let DDControlPanelFilterForm = React.createClass({
       return Number(col.id) === Number(this.props.filter.colId);
     });
 
-
     let constraintsOptions = {
       numerical: [
         {label: ">", value: "gt"},
@@ -108,8 +124,10 @@ let DDControlPanelFilterForm = React.createClass({
           </Col>
           <Col xs={3}>
             <input  style={{height:"38px"}} type='text' className='form-control'
-                    defaultValue={this.props.filter ? this.props.filter.value : ""}
-                    onBlur={this.handleFilterValueChange.bind(null, this.props.index)}
+                    value={this.state.input}
+                    help='Validation is based on string length.'
+                    onChange={this.handleFilterValueChange.bind(null, this.props.index)}
+                    onBlur={this.handleFilterValueBlur.bind(null, this.props.index)}
                     />
           </Col>
         </div>
