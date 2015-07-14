@@ -1,0 +1,74 @@
+/* for overall layout */
+
+html, body {
+  height: 100%;
+}
+
+#container, .DDWrapper, .DDWrapper>div {
+  height: 100%;
+}
+
+.padding15Col {
+  padding: 15px;
+}
+
+.zeroMarginRow {
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+.DDPanelView > div, .DDLeftSideBar > div {
+  overflow: scroll;
+}
+
+/* for global utilities */
+
+.anchor-cursor {
+  cursor: pointer;
+}
+
+.disabledColor {
+  color: #AAA;
+}
+
+/* for DDLeftSideBar */
+
+.DDLeftSideBar {
+  overflow: scroll;
+  padding-left: 15px; /* to amend the .row margin-left: 15 by default*/
+  height: 100%;
+  background-color: #EEE;
+}
+
+/* for DDPanelView */
+
+.DDPanelView {
+  overflow: scroll;
+  height: 100%;
+  padding-right: 15px
+}
+
+/* for DDPageView */
+
+.DDPageView {
+  overflow: scroll;
+  height: 100%;
+  padding-right: 15px
+}
+
+/* for DDPageThumbNail */
+
+.DDPageThumbNails {
+  padding-top: 15px;
+}
+
+/* for DDPagePanelWell */
+
+.DDPagePanelWell {
+  height: 200px;
+  line-height: 162px;
+}
+
+.DDPagePanelWell i {
+  vertical-align: middle;
+}
