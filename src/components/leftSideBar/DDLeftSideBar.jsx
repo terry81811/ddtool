@@ -9,14 +9,13 @@ const {
 const DDPageThumbNails = require("./DDPageThumbNails.jsx");
 
 const Fluxxor = require("fluxxor");
-const FluxMixin = Fluxxor.FluxMixin(React),
-    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+const FluxMixin = Fluxxor.FluxMixin(React);
 
 let DDLeftSideBar = React.createClass({
   mixins: [FluxMixin],
   displayName: "DDLeftSideBar",
   propTypes: {
-    statInfos: React.PropTypes.array
+    statInfos: React.PropTypes.array  //not used here, pass down as props to childcomponent to create thumbnails
   },
 
   render: function() {

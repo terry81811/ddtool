@@ -41,10 +41,10 @@ let PanelStore = Fluxxor.createStore({
     },
 
     onSetInitialValues: function(payload) {
+      console.log("PanelStore: onSetInitialValues");
       _filters = payload.filters;
       _measurement = payload.measurement;
       _aggregator = payload.aggregator;
-      console.log("update panel store");
       this.emit(Const.CHANGE_EVENT);
     },
 
@@ -74,23 +74,17 @@ let PanelStore = Fluxxor.createStore({
     },
 
     onDeleteFilter: function(payload) {
-      if(_filters.length <= 1){
-        _filters[0] = {
-          colId: null,
-          humanName: null,
-          where: null,
-          target: null
-        };
-      }else{
-        _.pullAt(_filters, payload.index);
-      }
+      _.pullAt(_filters, payload.index);
       this.emit(Const.CHANGE_EVENT);
     },
 
     onUpdateFilterCol: function(payload) {
+      console.log(payload);
       if(payload.filter){
         _filters[payload.index].colId = payload.filter.id;
         _filters[payload.index].humanName = payload.filter.humanName;
+        _filters[payload.index].where = null;
+        _filters[payload.index].value = null;
       }else{ //payload === undefined if not found (when click "clear")
         _filters[payload.index].colId = null;
         _filters[payload.index].humanName = null;

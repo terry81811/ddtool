@@ -56,9 +56,6 @@ let Index = React.createClass({
 
   componentDidMount: function() {
     this.getFlux().actions.DataActions.getAllResources();
-
-//    this.getFlux().actions.DataActions.getAllStatInfos();
-//    this.getFlux().actions.DataActions.getAllColInfos();
   },
 
   render: function() {
@@ -66,7 +63,6 @@ let Index = React.createClass({
     let statInfos = this.state.DataStore.statInfos;
     let statInfo = this.state.DataStore.statInfo;
     let misc = this.state.DataStore.misc;
-    console.log(this.state);
     return (
       <Row className={"DDWrapper"}>
         <Col md={2}>

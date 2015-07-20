@@ -16,10 +16,11 @@ let DDControlPanelFilterForm = React.createClass({
     filter: React.PropTypes.object.isRequired,
     colOptions: React.PropTypes.array.isRequired,
     index: React.PropTypes.number.isRequired,
-    cols: React.PropTypes.array.isRequired
+    cols: React.PropTypes.array.isRequired,
+    statInfos: React.PropTypes.array.isRequired
   },
 
-  //We Keep this state {input: value} in component instead of stores because
+  //We Keep this state {input: value} in component local state instead of stores state because
   //1. It is only the current text input, not the final value, therefore
   //2. every onChange will only trigger local state change; onBlur will trigger store state chanege
   //3. input DOM value will reference to local state
@@ -52,7 +53,7 @@ let DDControlPanelFilterForm = React.createClass({
     if(typeof event === "object"){
       this.setState({ input: event.target.value });
     }else if(typeof event === "string"){
-      this.setState({ input: event });
+      this.getFlux().actions.PanelActions.updateFilterValue(index, event);
     }
   },
 
@@ -107,6 +108,21 @@ let DDControlPanelFilterForm = React.createClass({
       ]
     };
 
+    let filterDefaultStatInfos = null;
+    let categoriesOptions = [];
+    if(this.props.filter.colId !== null){
+      filterDefaultStatInfos = _.find(this.props.statInfos, (statInfo) => {
+        return statInfo.grouper.grouperId === this.props.filter.colId;
+      });
+
+      if(filterDefaultStatInfos){
+        categoriesOptions = _.map(filterDefaultStatInfos.stat.general.values, (category)=>{
+          let label = category.label ? category.label : "[NULL]";
+          return {label: label, value: label};
+        });
+      }
+    }
+
     let filterOptionsForm = null;
     if(!col){
       filterOptionsForm = (<Col xs={5}/>);  //col is empty, show nothing
@@ -147,7 +163,7 @@ let DDControlPanelFilterForm = React.createClass({
           <Col xs={3}>
             <Select
               value={this.props.filter ? this.props.filter.value : ""}
-              options={constraintsOptions.categorical}
+              options={categoriesOptions}
               onChange={this.handleFilterValueChange.bind(null, this.props.index)}
               clearable={false}
             />

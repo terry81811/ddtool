@@ -25,7 +25,8 @@ let DataStore = Fluxxor.createStore({
         DataActTypes.RECEIVE_ALL_STAT_INFOS, this.onReceiveAllStatInfos,
         DataActTypes.RECEIVE_ALL_COL_INFOS, this.onReceiveAllColInfos,
         DataActTypes.RECEIVE_STAT_INFO, this.onReceiveStatInfo,
-        DataActTypes.UPDATE_CHART_TYPE, this.onUpdateChartType
+        DataActTypes.UPDATE_CHART_TYPE, this.onUpdateChartType,
+        DataActTypes.CLEAR_STAT_INFO, this.onClearStatInfo
       );
     },
 
@@ -39,15 +40,11 @@ let DataStore = Fluxxor.createStore({
     },
 
     onReceiveAllStatInfos: function(payload) {
-      console.log("stat:");
-      console.log(payload);
       _statInfos = payload.statInfos;
       this.emit(Const.CHANGE_EVENT);
     },
 
     onReceiveAllColInfos: function(payload) {
-      console.log("col:");
-      console.log(payload);
       _colInfos = payload.colInfos;
       this.emit(Const.CHANGE_EVENT);
     },
@@ -59,6 +56,11 @@ let DataStore = Fluxxor.createStore({
 
     onUpdateChartType: function(payload) {
       _misc.chartType = payload.chartType;
+      this.emit(Const.CHANGE_EVENT);
+    },
+
+    onClearStatInfo: function(){
+      _statInfo = null;
       this.emit(Const.CHANGE_EVENT);
     }
 

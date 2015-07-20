@@ -37,7 +37,6 @@ let DDPageViewStatTable = React.createClass({
     let total = this.calculateStat.total(statInfo.stat.general);
     let topItems = this.calculateStat.topItems(statInfo.stat.general, num);
     let statRows = _.map(topItems, function(topItem, key){
-        console.log(topItem[0].value / 2000);
 
       return (
         <tr key={key}>
@@ -53,20 +52,22 @@ let DDPageViewStatTable = React.createClass({
 
     return (
       <Table striped bordered condensed hover>
-        <tr>
-          <td width="20%">
-            <DropdownButton title={"Top "+ statRows.length}>
-              <MenuItem eventKey='1'>5</MenuItem>
-              <MenuItem eventKey='2'>4</MenuItem>
-            </DropdownButton>
-          </td>
-          <td>Count</td><td>%</td>
-          <td width="20%">
-            Last {statRows.length}
-          </td>
-          <td>Count</td><td>%</td>
-        </tr>
-        {statRows}
+        <tbody>
+          <tr>
+            <td width="20%">
+              <DropdownButton title={"Top "+ statRows.length}>
+                <MenuItem eventKey='1'>5</MenuItem>
+                <MenuItem eventKey='2'>4</MenuItem>
+              </DropdownButton>
+            </td>
+            <td>Count</td><td>%</td>
+            <td width="20%">
+              Last {statRows.length}
+            </td>
+            <td>Count</td><td>%</td>
+          </tr>
+          {statRows}
+        </tbody>
       </Table>
     );
   },
@@ -79,6 +80,7 @@ let DDPageViewStatTable = React.createClass({
 
     return (
       <Table striped bordered condensed hover>
+      <tbody>
         <tr>
           <td>Rows Count</td><td>{total}</td>
         </tr>
@@ -103,7 +105,7 @@ let DDPageViewStatTable = React.createClass({
         <tr>
           <td>min 5</td><td>{lastItems.join(", ")}</td>
         </tr>
-
+        </tbody>
       </Table>
     );
   },
@@ -121,7 +123,8 @@ let DDPageViewStatTable = React.createClass({
     });
 
     return (
-      <Table striped bordered condensed hover>
+      <Table id={"table"} striped bordered condensed hover>
+      <tbody>
         <tr>
           <td>Label Name</td><td>Count</td><td>%</td>
         </tr>
@@ -131,6 +134,7 @@ let DDPageViewStatTable = React.createClass({
           <td width="30%">{total}</td>
           <td width="30%">100%</td>
         </tr>
+      </tbody>
       </Table>
       );
   },

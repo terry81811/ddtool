@@ -93,6 +93,7 @@ module.exports = {
     },
     getAll() {
       return asyncGet(Const.API.stat + "stat_infos");
+//      return asyncGet("https://api.myjson.com/bins/1aoqi")
     },
   }
 };

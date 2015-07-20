@@ -5,18 +5,17 @@ const Const = require("../constants");
 const PanelActTypes = Const.ActTypes.Panel;
 
 let PanelActions = {
-  setInitialValues(statInfo) {
-    console.log("in action");
-    console.log(statInfo);
-    this.dispatch(
-      PanelActTypes.SET_INITIAL_VALUES,
-      {
-        filters: statInfo.filters,
-        measurement: statInfo.measurement,
-        aggregator: statInfo.measurement.aggregator
-      }
-    );
-  },
+//  setInitialValues(statInfo) {
+//    console.log("Panel action: setInitialValues");
+//    this.dispatch(
+//      PanelActTypes.SET_INITIAL_VALUES,
+//      {
+//        filters: statInfo.filters,
+//        measurement: statInfo.measurement,
+//        aggregator: statInfo.measurement.aggregator
+//      }
+//    );
+//  },
 
   updateFilters(filters) {
     this.dispatch(

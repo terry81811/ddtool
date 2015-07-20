@@ -17,36 +17,52 @@ let DDPagePanel = React.createClass({
     cols: React.PropTypes.array
   },
 
+  isStatInfoGrouperNumerical: function(statInfo) {
+      let col = _.find(this.props.cols, (col)=>{
+        return Number(col.id) === Number(statInfo.grouper.grouperId);
+      });
+      if(col){
+        return (col.contentType === "FLOAT" || col.contentType === "INTEGER") ? true : false;
+      }else{
+        return false; //assume grouper(x-Axis) is not numerical
+      }
+    },
+
   render: function() {
-    let col = _.find(this.props.cols, (col)=>{
-      return Number(col.id) === Number(this.props.statInfo.grouper.grouperId);
-    });
-
-    let isNumerical = false;  //assume grouper(x-Axis) is not numerical
-    if(col){
-      isNumerical = col.contentType === "FLOAT" || col.contentType === "INTEGER" ? true : false;
-    }
-
+    let isNumerical = (this.isStatInfoGrouperNumerical(this.props.statInfo));
     let data = [
       { key: "Count"}
     ];
     data[0].values = this.props.statInfo.stat.general.values;
 
-    let options = {
+    let chartOptions = {
       padding: {
         top: 20,
         bottom: 20,
-        left: 40,
+        left: 80,
         right: 10
       },
       size: {
         width: 400,
         height: 150
       },
+      axisLabel: {
+        x: "",
+        y: ""
+      },
       labels: false,
       legend: false,
       tick: {
-        max: 4,
+        x: {
+          culling: {
+            max: 4
+          },
+          rotate: 30,
+          multiline: false
+        },
+        y: {
+          count: 3,
+        }
       },
     };
 
@@ -80,7 +96,6 @@ let DDPagePanel = React.createClass({
       let max = _.max(this.props.statInfo.stat.general.values, function(category){
         return Number(category.value);
       });
-
       let min = _.min(this.props.statInfo.stat.general.values, function(category){
         return Number(category.value);
       });
@@ -106,6 +121,9 @@ let DDPagePanel = React.createClass({
       );
     }
 
+
+//general information for layout
+
     let numberOfRows = _.sum(this.props.statInfo.stat.general.values, function(category){
       return category.value;
     });
@@ -114,6 +132,10 @@ let DDPagePanel = React.createClass({
     if(isNumerical){
       sum = Number(this.props.statInfo.stat.numerical.mean) * numberOfRows;
     }
+
+    let col = _.find(this.props.cols, (col)=>{
+      return Number(col.id) === Number(this.props.statInfo.grouper.grouperId);
+    });
 
     return (
       <Well className={"DDPagePanelWell"}>
@@ -150,7 +172,7 @@ let DDPagePanel = React.createClass({
 
               <C3Chart  data={data}
                         type={"bar"}
-                        options={options}/>
+                        options={chartOptions}/>
             </Col>
             </Row>
           </Col>

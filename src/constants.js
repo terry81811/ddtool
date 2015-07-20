@@ -21,7 +21,8 @@ module.exports = {
       RECEIVE_ALL_STAT_INFOS: null,
       RECEIVE_ALL_COL_INFOS: null,
       RECEIVE_STAT_INFO: null,
-      UPDATE_CHART_TYPE: null
+      UPDATE_CHART_TYPE: null,
+      CLEAR_STAT_INFO: null
     }),
     Panel: scopedKeyMirror("Panel", {
       SET_INITIAL_VALUES: null,
@@ -40,7 +41,7 @@ module.exports = {
   CHANGE_EVENT: "change",
   API: {
     root: "//docker.yoctol.com/api/",
-    stat: "http://192.168.1.138:3000/api/"
+    stat: "//summer.yoctol.com/api/"
   },
 
 };

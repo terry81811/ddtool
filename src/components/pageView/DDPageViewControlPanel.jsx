@@ -19,6 +19,7 @@ let DDPageViewControlPanel = React.createClass({
   propTypes: {
     cols: React.PropTypes.array,  //for form selector options
     statInfo: React.PropTypes.object, //for initial form inputs
+    statInfos: React.PropTypes.array //for pass down to filterForm to render categoriies Options
   },
 
   getStateFromFlux: function() {
@@ -26,12 +27,6 @@ let DDPageViewControlPanel = React.createClass({
     return {
       PanelStore: flux.store("PanelStore").getState(),  //get form inpts from stats, apart from inherited, selected statInfo props
     };
-  },
-
-  componentWillReceiveProps: function(nextProps) {  //should do this because we can assess the page directly by url /page:id
-    if(nextProps.statInfo && nextProps.statInfo.id !== this.props.statInfo.id){
-      this.getFlux().actions.PanelActions.setInitialValues(nextProps.statInfo);
-    }
   },
 
   changeHandler: {
@@ -47,11 +42,17 @@ let DDPageViewControlPanel = React.createClass({
   },
 
   resetFormHandler: function() {
-    this.getFlux().actions.DataActions.getColInfo(this.props.statInfo.id);  //reset colInfo resource
+    this.getFlux().actions.DataActions.getStatInfo(this.props.statInfo.id);  //reset colInfo resource
   },
 
   submitFormHandler: function() {
-    this.getFlux().actions.PanelActions.submitForm(this.props.statInfo);  //reset colInfo resource
+    console.log("submiting...");
+    console.log(this.state);
+    this.getFlux().actions.PanelActions.submitForm(this.props.statInfo);
+  },
+
+  handleCreateFilter: function(){
+    this.getFlux().actions.PanelActions.createFilter();
   },
 
   whereMapping: function(where){
@@ -65,7 +66,6 @@ let DDPageViewControlPanel = React.createClass({
   },
 
   render: function() {
-
     let formOptions = { //keep rendering-purpose material in render()
       aggregators: [
         {label: "count", value: "count"},
@@ -81,8 +81,17 @@ let DDPageViewControlPanel = React.createClass({
     };
 
     let filtersRows = _.map(this.state.PanelStore.filters, (filter, key)=>{
-      return <DDControlPanelFilterForm key={key} index={key} filter={filter} cols={this.props.cols} colOptions={formOptions.columns}/>;
+      return (<DDControlPanelFilterForm key={key}
+                                        index={key}
+                                        filter={filter}
+                                        cols={this.props.cols}
+                                        statInfos={this.props.statInfos}
+                                        colOptions={formOptions.columns}/>);
     });
+
+    if(this.state.PanelStore.filters.length === 0){
+      filtersRows = <Button style={{marginTop: "10px"}} bsStyle={"primary"} onClick={this.handleCreateFilter}><i className={"fa fa-plus fa-fw"}></i>Filters</Button>;
+    }
 
     let filterDesc = _.map(this.state.PanelStore.filters, (filter, key)=>{
       return <span key={key}><br/>Where {filter.humanName} {this.whereMapping(filter.where)} {filter.value}</span>;

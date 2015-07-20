@@ -13,7 +13,11 @@ let DDPageThumbNails = React.createClass({
   render: function() {
     let statInfos = this.props.statInfos;
     let pageThumbNails = _.map(statInfos, function(page, key){
-      return  <ListGroupItem href={"#/page/"+page.id} key={key} header={page.humanName}><span className={"disabledColor"}>2015-01-01 00:00 </span></ListGroupItem>;
+      return  (
+          <ListGroupItem href={"#/page/"+page.id} key={key} header={page.humanName}>
+            <span className={"disabledColor"}>2015-01-01 00:00 </span>
+          </ListGroupItem>
+        );
     });
     return (
       <div className={"DDPageThumbNails"}>
