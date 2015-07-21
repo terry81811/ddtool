@@ -1,10 +1,10 @@
 const React = require("react");
 const _ = require("lodash");
-
 const {
   Table,
   TabbedArea, TabPane,
-  DropdownButton, MenuItem
+  DropdownButton, MenuItem,
+  Nav, NavItem
 } = require("react-bootstrap");
 
 let Fluxxor = require("fluxxor");
@@ -15,6 +15,15 @@ let DDPageViewStatTable = React.createClass({
   displayName: "DDPageViewStatTable",
   propTypes: {
     statInfo: React.PropTypes.object,
+    isNumerical: React.PropTypes.bool,
+  },
+
+  getInitialState: function(){
+    return {
+      activeKey: 1,
+      sortBy: "label",
+      sortingMethod: "acs"
+    };
   },
 
   calculateStat: {
@@ -23,53 +32,14 @@ let DDPageViewStatTable = React.createClass({
         return o.value;
       });
     },
-    topItems: function(stat, num) {
-      num = num < stat.values.length ? num : stat.values.length;
-      let sorted = _.sortBy(stat.values, "value");
-      let top = _.takeRight(sorted, num).reverse();
-      let last = _.take(sorted, num);
-      let zipped = _.zip(top, last);
-      return zipped;
-    },
-  },
-
-  renderStatTopItems: function(statInfo, num) {
-    let total = this.calculateStat.total(statInfo.stat.general);
-    let topItems = this.calculateStat.topItems(statInfo.stat.general, num);
-    let statRows = _.map(topItems, function(topItem, key){
-
-      return (
-        <tr key={key}>
-          <td>{topItem[0].label}</td>
-          <td>{topItem[0].value}</td>
-          <td>{(topItem[0].value / total * 100).toFixed(2)}%</td>
-          <td>{topItem[1].label}</td>
-          <td>{topItem[1].value}</td>
-          <td>{(topItem[1].value / total * 100).toFixed(2)}%</td>
-        </tr>
-      );
-    });
-
-    return (
-      <Table striped bordered condensed hover>
-        <tbody>
-          <tr>
-            <td width="20%">
-              <DropdownButton title={"Top "+ statRows.length}>
-                <MenuItem eventKey='1'>5</MenuItem>
-                <MenuItem eventKey='2'>4</MenuItem>
-              </DropdownButton>
-            </td>
-            <td>Count</td><td>%</td>
-            <td width="20%">
-              Last {statRows.length}
-            </td>
-            <td>Count</td><td>%</td>
-          </tr>
-          {statRows}
-        </tbody>
-      </Table>
-    );
+//    topItems: function(stat, num) {
+//      num = num < stat.values.length ? num : stat.values.length;
+//      let sorted = _.sortBy(stat.values, "value");
+//      let top = _.takeRight(sorted, num).reverse();
+//      let last = _.take(sorted, num);
+//      let zipped = _.zip(top, last);
+//      return zipped;
+//    },
   },
 
   renderNumericalStat: function(statInfo, num) {
@@ -79,32 +49,32 @@ let DDPageViewStatTable = React.createClass({
     let lastItems = _.take(statInfo.stat.numerical.min.sort(), num);
 
     return (
-      <Table striped bordered condensed hover>
-      <tbody>
-        <tr>
-          <td>Rows Count</td><td>{total}</td>
-        </tr>
-        <tr>
-          <td>Sum.</td><td>{statInfo.stat.numerical.sum}</td>
-        </tr>
-        <tr>
-          <td>Avg.</td><td>{statInfo.stat.numerical.mean}</td>
-        </tr>
-        <tr>
-          <td>Std.</td><td>{statInfo.stat.numerical.std}</td>
-        </tr>
-        <tr>
-          <td>
-            <DropdownButton title={"Max "+ topItems.length}>
-              <MenuItem eventKey='1'>5</MenuItem>
-              <MenuItem eventKey='2'>4</MenuItem>
-            </DropdownButton>
-          </td>
-          <td>{topItems.join(", ")}</td>
-        </tr>
-        <tr>
-          <td>min 5</td><td>{lastItems.join(", ")}</td>
-        </tr>
+      <Table striped bordered condensed hover id={"statTable"}>
+        <tbody>
+          <tr>
+            <td>資料筆數</td><td>{total}</td>
+          </tr>
+          <tr>
+            <td>加總</td><td>{statInfo.stat.numerical.mean * total}</td>
+          </tr>
+          <tr>
+            <td>平均</td><td>{Number(statInfo.stat.numerical.mean).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>標準差</td><td>{Number(statInfo.stat.numerical.std).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>
+              <DropdownButton title={"最大 "+ topItems.length +" 筆"}>
+                <MenuItem eventKey='1'>5</MenuItem>
+                <MenuItem eventKey='2'>4</MenuItem>
+              </DropdownButton>
+            </td>
+            <td>{topItems.join(", ")}</td>
+          </tr>
+          <tr>
+            <td>最小 5 筆</td><td> {lastItems.join(", ")}</td>
+          </tr>
         </tbody>
       </Table>
     );
@@ -112,7 +82,11 @@ let DDPageViewStatTable = React.createClass({
 
   renderRawContent: function(statInfo) {
     let total = this.calculateStat.total(statInfo.stat.general);
-    let statRows = _.map(statInfo.stat.general.values, function(row, key){
+    let values = _.sortBy(statInfo.stat.general.values, this.state.sortBy);
+    if(this.state.sortingMethod === "desc"){
+      values = values.reverse();
+    }
+    let statRows = _.map(values, function(row, key){
       return (
         <tr key={key}>
           <td>{row.label}</td>
@@ -123,40 +97,111 @@ let DDPageViewStatTable = React.createClass({
     });
 
     return (
-      <Table id={"table"} striped bordered condensed hover>
-      <tbody>
-        <tr>
-          <td>Label Name</td><td>Count</td><td>%</td>
-        </tr>
-        {statRows}
-        <tr className={"info"}>
-          <td width="40%">Total Count</td>
-          <td width="30%">{total}</td>
-          <td width="30%">100%</td>
-        </tr>
-      </tbody>
+      <Table id={"rawDataTable"} striped bordered condensed hover>
+        <tbody>
+          <tr>
+            <td>Label Name</td><td>Count</td><td>%</td>
+          </tr>
+          {statRows}
+          <tr className={"info"}>
+            <td width="40%">Total Count</td>
+            <td width="30%">{total}</td>
+            <td width="30%">100%</td>
+          </tr>
+        </tbody>
       </Table>
       );
   },
 
-  isGrouperNumerical: function(statInfo) {
-    return _.contains(["interger", "float"], statInfo.grouper.type);
+  handleCopyTableContent: function() {
+    let el = null;
+    if(this.props.isNumerical && this.state.activeKey === 2){ //if statInfo is numerical && focused on statTable
+      el = document.getElementById("statTable");
+    }else{
+      el = document.getElementById("rawDataTable");
+    }
+
+    let body = document.body, range, sel;
+    if (document.createRange && window.getSelection) {
+        range = document.createRange();
+        sel = window.getSelection();
+        sel.removeAllRanges();
+        try {
+          range.selectNodeContents(el);
+          sel.addRange(range);
+        } catch (e) {
+          range.selectNode(el);
+          sel.addRange(range);
+        }
+    } else if (body.createTextRange) {
+      range = body.createTextRange();
+      range.moveToElementText(el);
+      range.select();
+    }
+    document.execCommand("copy");
+    sel.removeAllRanges();
+    alert("已經複製到剪貼簿");
+    this.handleSelectTab(this.state.activeKey);
+  },
+
+  handleSelectTab: function(key) {
+    this.setState({
+      activeKey: key
+    });
+  },
+
+  handleSorting: function(by, method) {
+    this.setState({
+      sortBy: by,
+      sortingMethod: method
+    });
+    this.handleSelectTab(this.state.activeKey);
   },
 
   render: function() {
-    if(this.isGrouperNumerical(this.props.statInfo)){
+
+    let copyTableButton = (
+      <NavItem className={"pull-right"} onClick={this.handleCopyTableContent}>
+        <i className="fa fa-clipboard"></i>
+      </NavItem>
+    );
+    let sortingDropdown = (
+      <DropdownButton title="sort by" className={"pull-right"} >
+        <MenuItem onClick={this.handleSorting.bind(null, "label", "asc")}><i className="fa fa-sort-alpha-asc"> Label Name </i></MenuItem>
+        <MenuItem onClick={this.handleSorting.bind(null, "label", "desc")}><i className="fa fa-sort-alpha-desc"> Label Name </i></MenuItem>
+        <MenuItem onClick={this.handleSorting.bind(null, "value", "asc")}><i className="fa fa-sort-numeric-asc"> Value </i></MenuItem>
+        <MenuItem onClick={this.handleSorting.bind(null, "value", "desc")}><i className="fa fa-sort-numeric-desc"> Value </i></MenuItem>
+      </DropdownButton>
+    );
+
+    if(this.props.isNumerical){
       return (
-        <TabbedArea defaultActiveKey={1}>
-          <TabPane eventKey={1} tab='統計表格'>{this.renderRawContent(this.props.statInfo)}</TabPane>
-          <TabPane eventKey={2} tab='統計資訊'>{this.renderNumericalStat(this.props.statInfo, 5)}</TabPane>
-        </TabbedArea>
+        <div>
+          <Nav bsStyle="tabs" activeKey={this.state.activeKey} onSelect={this.handleSelectTab}>
+            <NavItem eventKey={1}>原始資料</NavItem>
+            <NavItem eventKey={2}>敘述統計</NavItem>
+            {copyTableButton}
+            {sortingDropdown}
+          </Nav>
+          <TabbedArea activeKey={this.state.activeKey}>
+            <TabPane eventKey={1}>{this.renderRawContent(this.props.statInfo)}</TabPane>
+            <TabPane eventKey={2}>{this.renderNumericalStat(this.props.statInfo, 5)}</TabPane>
+          </TabbedArea>
+        </div>
       );
     }else{
       return (
-        <TabbedArea defaultActiveKey={1}>
-          <TabPane eventKey={1} tab='統計表格'>{this.renderRawContent(this.props.statInfo)}</TabPane>
-          <TabPane eventKey={2} tab='Max/Min'>{this.renderStatTopItems(this.props.statInfo, 5)}</TabPane>
-        </TabbedArea>
+        <div>
+          <Nav bsStyle="tabs" activeKey={1}>
+            <NavItem eventKey={1}>原始資料</NavItem>
+            {copyTableButton}
+            {sortingDropdown}
+          </Nav>
+          <TabbedArea defaultActiveKey={1} activeKey={1}>
+            <TabPane eventKey={1} >{this.renderRawContent(this.props.statInfo)}</TabPane>
+          </TabbedArea>
+        </div>
+
       );
     }
   }

@@ -2,7 +2,6 @@ const React = require("react");
 const C3Chart = require("c3-react");
 const Select = require("react-select");
 const _ = require("lodash");
-const CopyToClipboard = require("react-copy-to-clipboard");
 const {
   Row, Col, Table
 } = require("react-bootstrap");
@@ -79,28 +78,6 @@ let DDPageView = React.createClass({
     return this.props.statInfo;
   },
 
-  handleSelect: function(el) {
-        var body = document.body, range, sel;
-        if (document.createRange && window.getSelection) {
-            range = document.createRange();
-            sel = window.getSelection();
-            sel.removeAllRanges();
-            try {
-              range.selectNodeContents(el);
-              sel.addRange(range);
-            } catch (e) {
-              range.selectNode(el);
-              sel.addRange(range);
-            }
-        } else if (body.createTextRange) {
-          range = body.createTextRange();
-          range.moveToElementText(el);
-          range.select();
-        }
-        document.execCommand('copy');
-        sel.removeAllRanges();
-  },
-
   render: function() {
     if(this.props.statInfo === null){
       return <h3>no data available</h3>;
@@ -153,9 +130,6 @@ let DDPageView = React.createClass({
 
             <h3>{this.props.statInfo.humanName}</h3>
             <Col md={6}>
-
-            <button onClick={this.handleSelect.bind(null,document.getElementById('table'))}>select</button>
-
               <DDPageViewControlPanel statInfo={this.props.statInfo} statInfos={this.props.statInfos} cols={this.props.cols}/>
             </Col>
 
@@ -177,7 +151,7 @@ let DDPageView = React.createClass({
                         options={chartOptions}/>
               <Row className={"zeroMarginRow"}>
                 <Col>
-                  <DDPageViewStatTable ref="myInput" statInfo={this.props.statInfo}/>
+                  <DDPageViewStatTable statInfo={this.props.statInfo} isNumerical={this.isStatInfoGrouperNumerical(this.props.statInfo)}/>
                 </Col>
               </Row>
             </Col>
